@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title></title>
+		<script src="js/vue.js" type="text/javascript" charset="utf-8"></script>
+	</head>
+	<body>
+		<div id="root">
+			<test :msg="message"></test>
+		</div>
+		<script>
+			// let _toString = Object.prototype.toString
+			// _toString.call(Obj) === '[object Object]' -> isPlainObject
+			Vue.component('test', { // 可以不指定name, id(第一个参数) 就是 name 
+				template: '<div>{{msg}}</div>',
+				props: {
+					msg: {
+						type: String,
+						default: 'default message'
+					}
+				}
+			})
+			new Vue({
+				el: '#root',
+				data() {
+					return {
+						message: "Test Component"
+					}
+				}
+			})
+		</script>
+	</body>
+</html>

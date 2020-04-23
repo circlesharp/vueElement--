@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title></title>
+		<script src="js/vue.js" type="text/javascript" charset="utf-8"></script>
+	</head>
+	<body>
+		<div id="root">
+			<div>案例1： 基本用法</div>
+			<Test>
+				<template #header="{ user }">
+					<div>自定义header({{ user.a }})</div>
+				</template>
+				<template #default="{ user }">
+					<div>自定义body({{ user.b }})</div>
+				</template>
+			</Test>
+		</div>
+		
+		<script type="text/javascript">
+
+			Vue.component('Test', {
+				template: `
+					<div>
+						<slot name="header" :user="obj" :section="\'header\'">
+							<div>默认header</div>
+						</slot>
+						<slot :user="obj" :section="'body'">
+							默认body
+						</slot>
+					</div>
+				`,
+				data () {
+					return {
+						obj: { a: 'first', b: 'last' }
+					}
+				}
+			})
+
+			new Vue({
+				el: '#root'
+			})
+		</script>
+	</body>
+</html>

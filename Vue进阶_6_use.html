@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title></title>
+		<script src="js/vue.js" type="text/javascript" charset="utf-8"></script>
+		<style>
+			#loading-wrapper {
+				position: absolute;
+				display: flex;
+				top: 0;
+				bottom: 0;
+				left: 0;
+				right: 0;
+				justify-content: center;
+				align-items: center;
+				background: rgba(0, 0, 0, 0.5);
+			}
+		</style>
+	</head>
+  <body>
+    <div id="root">
+      <button @click="showLoading">显示Loading</button>
+    </div>
+		
+    <script>
+
+			const myLoading = {
+				install: () => {
+					const LoadingComponent = Vue.extend({
+					template: `
+					<div id="loading-wrapper">
+						<p>{{str}}</p>
+					</div>
+					`,
+					props: {
+						str: { type: String, default: 'loading' }
+					}
+					})
+
+					const loading = (str) => {
+						const div = document.createElement('p')
+						div.setAttribute('id', 'temp')
+						document.body.append(div)
+						new LoadingComponent({ props: { str: { type: String, default: str } } }).$mount('#temp')
+						return () => { document.body.removeChild(document.querySelector('#loading-wrapper')) }
+					}
+
+					Vue.prototype.$loading = loading
+				}
+			}
+
+			Vue.use(myLoading)
+
+			new Vue({
+				el: '#root',
+				created () {
+					this.$on('loading', this.tackleLoading)
+				},
+				methods: {
+					tackleLoading () {
+						const hide = this.$loading('wait for a second...')
+						setTimeout(() => {
+							hide()
+						}, 2e3)
+					},
+					showLoading () {
+						this.$emit('loading')
+					}
+				}
+			})
+    </script>
+  </body>
+</html>

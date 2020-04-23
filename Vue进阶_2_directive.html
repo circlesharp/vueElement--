@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title></title>
+		<script src="js/vue.js" type="text/javascript" charset="utf-8"></script>
+	</head>
+	<body>
+		<!-- 当isLoading发生变化，触发directive里面的update -->
+		<div id="root" v-loading="isLoading">
+			<div>{{data}}</div>
+			<button @click="onUpdate">更新</button>
+		</div>
+		
+		<script>
+			let updataObj = {
+				update(el, binding, vnode) {
+					console.log(el, binding, vnode)
+					if (binding.value) {
+						const div = document.createElement('div')
+						div.innerText = '加载中...'
+						div.setAttribute('id', 'loading')
+						div.style.position = 'absolute'
+						div.style.left = 0
+						div.style.top = 0
+						div.style.width = '100%'
+						div.style.height = '100%'
+						div.style.display = 'flex'
+						div.style.justifyContent = 'center'
+						div.style.alignItems = 'center'
+						div.style.color = 'white'
+						div.style.background = 'rgba(0, 0, 0, .7)'
+						document.body.append(div)
+					} else {
+						document.body.removeChild(document.getElementById('loading'))
+					}
+				}
+			}
+			let undataFun = (el, binding, vnode) => {
+				console.log(el, binding, vnode)
+				if (binding.value) {
+					const div = document.createElement('div')
+					div.innerText = '加载中...'
+					div.setAttribute('id', 'loading')
+					div.style.position = 'absolute'
+					div.style.left = 0
+					div.style.top = 0
+					div.style.width = '100%'
+					div.style.height = '100%'
+					div.style.display = 'flex'
+					div.style.justifyContent = 'center'
+					div.style.alignItems = 'center'
+					div.style.color = 'white'
+					div.style.background = 'rgba(0, 0, 0, .7)'
+					document.body.append(div)
+				} else {
+					// 因为使用函数的时候，会绑定到 bind & update 当中
+					// bind 的时候还没触发 onUpdate 方法，所以没有这个节点
+					let node = document.getElementById('loading')
+					node && document.body.removeChild(node)
+				}
+			}
+			Vue.directive('loading', undataFun)
+			new Vue({
+				el: '#root',
+				data() {
+					return {
+						isLoading: false,
+						data: '',
+						// updataFun: 
+						
+					}
+				},
+				methods: {
+					onUpdate() {
+						this.isLoading = true
+						setTimeout(() => {
+							this.data = '用户数据'
+							this.isLoading = false
+						}, 3000)
+					}
+				}
+			})
+		</script>
+	</body>
+</html>

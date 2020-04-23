@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title></title>
+		<script src="js/vue.js" type="text/javascript" charset="utf-8"></script>
+	</head>
+	<body>
+		<div id="root1">{{data}}</div>
+		<div id="root2">{{data}}</div>
+		<div id="root3">
+			<button @click="change">change</button>
+		</div>
+		
+		<script type="text/javascript">
+			// Vuex 的原理关键：使用 Vue 实例管理状态
+			const registerPlugin = (Vue) => {
+				const vuex = {}
+				vuex._vm = new Vue({
+					data: {
+						message: 'hello vue.js'
+					}
+				})
+				vuex.state = vuex._vm
+				vuex.mutations = {
+					setMessage (value) {
+						vuex.state.message = value
+					}
+				}
+				function init () {
+					this.$store = vuex // 这就是为啥可以 this.$store.store
+				}
+				Vue.mixin({
+					// beforeCreate: init
+					beforeCreate: function () {
+						this.$store = vuex // 不能用箭头，因为this指代每一个vue实例
+					}
+				})
+			}
+			
+			// 使用插件
+			Vue.use(registerPlugin)
+			
+			// 实例化
+			new Vue({
+				el: '#root1',
+				computed: {
+					data () {
+						return this.$store.state.message
+					}
+				}
+			})
+			new Vue({
+				el: '#root2',
+				computed: {
+					data () {
+						return this.$store.state.message
+					}
+				}
+			})
+			new Vue({
+				el: '#root3',
+				methods: {
+					change () {
+						const newValue = this.$store.state.message + '.'
+						this.$store.mutations.setMessage(newValue)
+					}
+				}
+			})
+		</script>
+	</body>
+</html>

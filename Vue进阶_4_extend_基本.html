@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title></title>
+		<script src="js/vue.js" type="text/javascript" charset="utf-8"></script>
+	</head>
+	<body>
+		<div id="root">
+			<test :msg="message"></test>
+		</div>
+		<script>
+			const component = Vue.extend({
+				template: '<div>{{msg}}</div>',
+				props: {
+					msg: {
+						type: String,
+						default: 'default message'
+					}
+				},
+				name: 'Test'
+			})
+			Vue.component('Test', component)
+			new Vue({
+				el: '#root',
+				data() {
+					return {
+						message: "Test Extend Component"
+					}
+				}
+			})
+		</script>
+	</body>
+</html>
